@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dryun.domain.mapper.AdminUserMapper">
+    <resultMap id="AdminUserResultMap" type="org.dryun.domain.entity.AdminUser">
+        <id property="id" column="id"/>
+        <result property="adminUserId" column="admin_user_id"/>
+        <result property="adminUserNumber" column="admin_user_number"/>
+        <result property="adminUserName" column="admin_user_name"/>
+        <result property="adminUserPass" column="admin_user_pass"/>
+        <result property="adminUserImg" column="admin_user_img"/>
+        <result property="adminUserState" column="admin_user_state"/>
+    </resultMap>
+
+    <select id="adminLogin" parameterType="java.lang.String" resultMap="AdminUserResultMap">
+        select * from admin_users
+        where admin_user_number =#{param1}
+        and admin_user_pass =#{param2}
+        and admin_user_state = 0
+    </select>
+
+    <select id="finAdminUserByNumber" parameterType="java.lang.String" resultMap="AdminUserResultMap">
+        select * from admin_users where admin_user_number =#{adminUserNumber} and admin_user_state = 0
+    </select>
+
+    <select id="allAdminUser" resultMap="AdminUserResultMap">
+        select * from admin_users where  admin_user_state = 0
+    </select>
+
+</mapper>

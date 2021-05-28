@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dryun.domain.mapper.GoodsTypeMapper">
+    <resultMap id="GoodsTypeResultMap" type="org.dryun.domain.entity.GoodsType">
+        <id column="id" property="id"/>
+        <result column="goods_type_id" property="goodsTypeId"/>
+        <result column="goods_type_name" property="goodsTypeName"/>
+        <result column="goods_type_img" property="goodsTypeImg"/>
+        <result column="goods_type_state" property="goodsTypeState"/>
+    </resultMap>
+
+    <select id="finGoodsTypeByClassIfyId" parameterType="java.lang.String" resultMap="GoodsTypeResultMap">
+        select g.goods_type_id,g.goods_type_name,g.goods_type_img from goods_type AS g,classify_goods_type AS c
+        where g.goods_type_id = c.goods_type_id
+        and c.classify_id = #{classIfyId}
+        and g.goods_type_state = 0;
+    </select>
+
+</mapper>

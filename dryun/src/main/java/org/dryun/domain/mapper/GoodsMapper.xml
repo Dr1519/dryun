@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dryun.domain.mapper.GoodsMapper">
+<resultMap id="GoodsResultMap" type="org.dryun.domain.entity.Goods">
+    <id column="id" property="id"/>
+    <result column="goods_id" property="goodsId"/>
+    <result column="goods_name" property="goodsName"/>
+    <result column="goods_img" property="goodsImg"/>
+    <result column="goods_original_price" property="goodsOriginalPrice"/>
+    <result column="goods_present_price" property="goodsPresentPrice"/>
+    <result column="goods_state" property="goodsState"/>
+</resultMap>
+
+<select id="finAllGoods" resultMap="GoodsResultMap">
+        select * from goods where goods_state = 0
+    </select>
+
+<select id="finGoodsByType" parameterType="java.lang.String" resultMap="GoodsResultMap">
+        select g.goods_id,g.goods_name,g.goods_img,g.goods_original_price,g.goods_present_price from goods AS g,goods_goods_type AS c
+        where g.goods_id = c.goods_id
+        and c.goods_type_id =#{goodsTypeId}
+        and g.goods_state = 0;
+
+    </select>
+
+</mapper>
