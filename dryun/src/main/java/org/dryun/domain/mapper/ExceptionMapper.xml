@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dryun.domain.mapper.ExceptionMapper">
+    <resultMap id="excepResultMap" type="org.dryun.domain.entity.ExceptionLog">
+        <id property="id" column="id"/>
+        <result property="excId" column="exc_id"/>
+        <result property="excRequParam" column="exc_requ_param"/>
+        <result property="excName" column="exc_name"/>
+        <result property="excMessage" column="exc_message"/>
+        <result property="excUserId" column="exc_user_id"/>
+        <result property="excUserName" column="exc_user_name"/>
+        <result property="excMethod" column="exc_method"/>
+        <result property="excUrl" column="exc_url"/>
+        <result property="excIp" column="exc_ip"/>
+        <result property="excVer" column="exc_ver"/>
+        <result property="excCreateTime" column="exc_create_time"/>
+    </resultMap>
+    <resultMap id="countExcepLog" type="java.lang.Integer">
+        <result column="count"/>
+    </resultMap>
+
+    <insert id="addExcLog" parameterType="org.dryun.domain.entity.ExceptionLog">
+        insert into exception_log(exc_id,exc_requ_param,exc_name,exc_message,exc_method,exc_url,exc_ip,exc_create_time
+        )values (
+        #{excId},#{excRequParam},#{excName},#{excMessage},#{excMethod},#{excUrl},#{excIp},#{excCreateTime}
+        )
+    </insert>
+
+    <select id="queryExcepLogPage" parameterType="org.dryun.domain.entity.ExceptionLog" resultMap="excepResultMap,countExcepLog">
+        select SQL_CALC_FOUND_ROWS * from exception_log
+            <if test="(startDate!=null and startDate!='')||(endDate!=null and endDate!='')">
+                where exc_create_time between #{startDate} and #{endDate}
+            </if>
+        ORDER BY exc_create_time DESC limit #{pageNo},#{pageSize};
+        SELECT FOUND_ROWS() as count;
+    </select>
+</mapper>

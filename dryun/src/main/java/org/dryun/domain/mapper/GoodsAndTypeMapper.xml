@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dryun.domain.mapper.GoodsAndTypeMapper">
+    <resultMap id="goodsAndTypeResultMap" type="org.dryun.domain.entity.GoodsAndType">
+        <id column="id" property="id"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="goodsTypeId" column="goods_type_id"/>
+    </resultMap>
+
+    <insert id="addGoodsAndType" parameterType="org.dryun.domain.entity.GoodsAndType">
+        insert into goods_goods_type(goods_id,goods_type_id) values (#{goodsId},#{goodsTypeId})
+    </insert>
+
+    <update id="delGoodsAndTypeByGoodsId" parameterType="java.lang.String">
+        update goods_goods_type set g_gt_state = -1 where goods_id = #{goodsId}
+    </update>
+
+    <update id="delGoodsAndTypeByGoodsTypeId" parameterType="java.lang.String">
+        update goods_goods_type set g_gt_state = -1 where goods_type_id = #{goodsTypeId}
+    </update>
+
+</mapper>

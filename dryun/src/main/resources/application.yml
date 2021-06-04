@@ -1,0 +1,62 @@
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  server:
+    connectionTimeout: 180000
+  servlet:
+    multipart:
+      max-file-size: 300MB
+      max-request-size: 500MB
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: resources/**,static/**,templates/**
+      exclude: org/**
+  mvc:
+    static-path-pattern: /image/**
+  resources:
+    static-locations: file:D://UploadFiles
+  redis:
+    #redis数据库索引(默认为0)
+    database: 0
+    #redis服务器地址
+    host: localhost
+    #redis服务器连接端口
+    port: 6379
+    #redis连接密码
+    password:
+    #redis连接池设置
+    pool:
+      #最大空闲连接
+      max-idle: 100
+      #最小空闲连接
+      min-idle: 1
+      #最大连接数(负数表示没有限制)
+      max-active: 1000
+      #最大阻塞等待时间(负数表示没有限制)
+      max-wait: -1
+      #连接超时时间(毫秒)
+      timeout: 0`
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/dryun?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8&allowMultiQueries=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 19990320
+    dbcp2:
+      initial-size: 5
+      min-idle: 5
+      max-total: 5
+      max-wait-millis: 200
+mybatis:
+  mapper-locations: classpath:org.dryun.domain.mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+thymeleaf:
+  check-template-location: true
+  prefix: classpath:/templates/
+  suffix: .html
+  encoding: UTF-8
+  content-type: text/html
+  mode: HTML5

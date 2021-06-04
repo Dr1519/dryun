@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dryun.domain.mapper.GoodsAndIfyMapper">
+    <resultMap id="goodsAndIfyResultMap" type="org.dryun.domain.entity.GoodsAndIfy">
+        <id column="id" property="id"/>
+        <result property="classifyId" column="classify_id"/>
+        <result property="goodsId" column="goods_id"/>
+    </resultMap>
+
+    <insert id="addGoodsAndIfy" parameterType="org.dryun.domain.entity.GoodsAndIfy">
+        insert into goods_classify(classify_id,goods_id) values (#{classifyId},#{goodsId})
+    </insert>
+
+    <update id="delGoodsAndIfyByGoodsId" parameterType="java.lang.String">
+        update goods_classify set g_c_state = -1 where goods_id = #{goodsId}
+    </update>
+
+    <update id="delGoodsAndIfyByClassifyId" parameterType="java.lang.String">
+        update goods_classify set g_c_state = -1 where classify_id = #{classifyId}
+    </update>
+
+</mapper>

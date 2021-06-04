@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dryun.domain.mapper.ClassIfyMapper">
+    <resultMap id="ClassIfyResultMap" type="org.dryun.domain.entity.ClassIfy">
+        <id column="id" property="id"/>
+        <result column="classify_id" property="classIfyId"/>
+        <result column="classify_name" property="classIfyName"/>
+        <result column="classify_state" property="classIfyState"/>
+    </resultMap>
+
+    <select id="finAllClassIfy" resultMap="ClassIfyResultMap">
+        select * from classify where classify_state = 0
+    </select>
+
+    <insert id="addClassIfy" parameterType="org.dryun.domain.entity.ClassIfy">
+        insert into classify (classify_id,classify_name) values (#{classIfyId},#{classIfyName})
+    </insert>
+
+    <update id="delClassIfy" parameterType="java.lang.String">
+        update classify set classify_state = -1 where classify_id = #{classIfyId}
+    </update>
+
+</mapper>

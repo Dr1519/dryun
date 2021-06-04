@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dryun.domain.mapper.GoodsMapper">
+<resultMap id="GoodsResultMap" type="org.dryun.domain.entity.Goods">
+    <id column="id" property="id"/>
+    <result column="goods_id" property="goodsId"/>
+    <result column="goods_name" property="goodsName"/>
+    <result column="goods_img" property="goodsImg"/>
+    <result column="goods_price" property="goodsPrice"/>
+    <result column="goods_desc" property="goodsDesc"/>
+    <result column="goods_stock" property="goodsStock"/>
+    <result column="goods_sales" property="goodsSales"/>
+    <result column="goods_launch_time" property="goodsLaunchTime"/>
+    <result column="goods_state" property="goodsState"/>
+    <!-- 多表关联映射 -->
+    <collection property="goodsTypes" ofType="org.dryun.domain.entity.GoodsType">
+        <id property="goodsTypeId" column="goods_type_id"/>
+        <result property="goodsTypeName" column="goods_type_name"/>
+    </collection>
+    <!-- 多表关联映射 -->
+    <collection property="classIfies" ofType="org.dryun.domain.entity.ClassIfy">
+        <id property="classIfyId" column="classify_id"/>
+        <result property="classIfyName" column="classify_name"/>
+    </collection>
+
+</resultMap>
+    <resultMap id="countGoods" type="java.lang.Integer">
+        <result column="count"/>
+    </resultMap>
+
+<select id="finAllGoods" resultMap="GoodsResultMap">
+        select * from goods where goods_state = 0
+    </select>
+
+<select id="finGoodsByType" parameterType="java.lang.String" resultMap="GoodsResultMap">
+        select g.goods_id,g.goods_name,g.goods_img,g.goods_price from goods AS g,goods_goods_type AS c
+        where g.goods_id = c.goods_id
+        and c.goods_type_id =#{goodsTypeId}
+        and g.goods_state = 0;
+    </select>
+
+    <select id="queryGoodsPage" parameterType="org.dryun.domain.entity.GoodsPack" resultMap="GoodsResultMap,countGoods">
+            select SQL_CALC_FOUND_ROWS g.goods_id,g.goods_name,g.goods_img,g.goods_launch_time,g.goods_price,
+            g.goods_sales,g.goods_stock,g.goods_state,c.classify_id,c.classify_name,gt.goods_type_id,gt.goods_type_name
+            from goods g,classify c,goods_type gt,goods_goods_type g_gt,goods_classify gc
+            where g.goods_id = gc.goods_id
+            and g.goods_id = g_gt.goods_id
+            and c.classify_id = gc.classify_id
+            and g_gt.goods_type_id = gt.goods_type_id
+            <if test="classIfyId!=null and classIfyId!=''">
+                and gc.classify_id = #{classIfyId}
+            </if>
+            <if test="goodsTypeId!=null and goodsTypeId!=''">
+                and g_gt.goods_type_id = #{goodsTypeId}
+            </if>
+            <if test="goodsState!=null and goodsState!=''">
+                and goods_state = #{goodsState}
+            </if>
+            <if test="(startDate!=null and startDate!='')||(endDate!=null and endDate!='')">
+                and goods_launch_time between #{startDate} and #{endDate}
+            </if>
+            ORDER BY goods_launch_time DESC limit #{pageNo},#{pageSize};
+            SELECT FOUND_ROWS() as count;
+    </select>
+
+    <insert id="addGoods" parameterType="org.dryun.domain.entity.Goods">
+        insert into goods(goods_id,goods_name,goods_img,goods_price,goods_desc,goods_launch_time) values (#{goodsId},#{goodsName},#{goodsImg},#{goodsPrice},#{goodsDesc},#{goodsLaunchTime})
+    </insert>
+
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dryun.domain.mapper.WechatUserMapper">
+    <resultMap id="wechatUserResultMap" type="org.dryun.domain.entity.WechatUser">
+        <id property="openId" column="open_id"/>
+        <result property="skey" column="skey"/>
+        <result property="createTime" column="create_time"/>
+        <result property="lastVisitTime" column="last_visit_time"/>
+        <result property="sessionKey" column="session_key"/>
+        <result property="city" column="city"/>
+        <result property="province" column="province"/>
+        <result property="country" column="country"/>
+        <result property="avatarUrl" column="avatar_url"/>
+        <result property="gender" column="gender"/>
+        <result property="nickName" column="nick_name"/>
+    </resultMap>
+    <resultMap id="countWechatUser" type="java.lang.Integer">
+        <result column="count"/>
+    </resultMap>
+
+    <insert id="addWechatUser" parameterType="org.dryun.domain.entity.WechatUser">
+        insert into wx_users
+        (open_id,skey,create_time,last_visit_time,session_key,city,province,country,avatar_url,gender,nick_name)
+        values
+        (#{openId},#{skey},#{createTime},#{lastVisitTime},#{sessionKey},#{city},#{province},#{country},#{avatarUrl},#{gender},#{nickName})
+    </insert>
+
+    <select id="selectUserByOpenId" parameterType="java.lang.String" resultMap="wechatUserResultMap">
+        select * from wx_users where open_id = #{openId}
+    </select>
+
+    <update id="updateUserByOpenId" parameterType="org.dryun.domain.entity.WechatUser">
+        update wx_users set last_visit_time = #{lastVisitTime},skey = #{skey} where open_id = #{openId}
+    </update>
+
+    <select id="queryWechatUserPage" parameterType="java.lang.Integer" resultMap="wechatUserResultMap,countWechatUser">
+        select SQL_CALC_FOUND_ROWS * from wx_users limit #{param1},#{param2};
+        SELECT FOUND_ROWS() as count;
+    </select>
+</mapper>

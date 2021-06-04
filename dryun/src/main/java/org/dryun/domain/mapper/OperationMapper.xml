@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.dryun.domain.mapper.OperationMapper">
+    <resultMap id="operaResultMap" type="org.dryun.domain.entity.OperationLog">
+        <id property="id" column="id"/>
+        <result property="operId" column="oper_id"/>
+        <result property="operModul" column="oper_modul"/>
+        <result property="operType" column="oper_type"/>
+        <result property="operDesc" column="oper_desc"/>
+        <result property="operRequParam" column="oper_requ_param"/>
+        <result property="operUserId" column="oper_user_id"/>
+        <result property="operUserName" column="oper_user_name"/>
+        <result property="operMethod" column="oper_method"/>
+        <result property="operUrl" column="oper_url"/>
+        <result property="operIp" column="oper_ip"/>
+        <result property="operCreateTime" column="oper_create_time"/>
+        <result property="operVer" column="oper_ver"/>
+    </resultMap>
+    <resultMap id="countOperLog" type="java.lang.Integer">
+        <result column="count"/>
+    </resultMap>
+
+    <insert id="addOperLog" parameterType="org.dryun.domain.entity.OperationLog">
+        insert into
+        operation_log(oper_id,oper_modul,oper_type,oper_desc,oper_requ_param,oper_user_id,oper_user_name,oper_method,oper_url,oper_ip,oper_create_time)
+        values(#{operId},#{operModul},#{operType},#{operDesc},#{operRequParam},#{operUserId},#{operUserName},#{operMethod},#{operUrl},#{operIp},#{operCreateTime})
+    </insert>
+
+    <select id="countOperLog" resultType="java.lang.Integer">
+        select count(*) from operation_log
+    </select>
+
+    <select id="queryOperLogPage" parameterType="org.dryun.domain.entity.OperaPack" resultMap="operaResultMap,countOperLog">
+        select SQL_CALC_FOUND_ROWS * from operation_log
+        <where>
+        <if test="adminUserId!=null and adminUserId!=''">
+            oper_user_id = #{adminUserId}
+        </if>
+        <if test="operType!=null and operType!=''">
+            and oper_type = #{operType}
+        </if>
+        <if test="(startDate!=null and startDate!='')||(endDate!=null and endDate!='')">
+            and oper_create_time between #{startDate} and #{endDate}
+        </if>
+        </where>
+        ORDER BY oper_create_time DESC limit #{pageNo},#{pageSize};
+        SELECT FOUND_ROWS() as count;
+    </select>
+</mapper>
